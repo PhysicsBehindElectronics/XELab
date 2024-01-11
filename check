@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# --------------------------------------------------------------------------
+#
+# This file is part of the XELab software package.
+#
+# Version 1.1 - January 2024
+#
+#
+# The XELab package is free software; you can use it, redistribute it,
+# and/or modify it under the terms of the GNU General Public License
+# version 3 as published by the Free Software Foundation. The full text
+# of the license can be found in the file LICENSE.txt at the top level of
+# the package distribution.
+#
+# Authors:
+# 		Leonardo Ricci, Alessio Perinelli, Marco Prevedelli
+# 		leonardo.ricci@unitn.it
+# 		alessio.perinelli@unitn.it
+# 		marco.prevedelli@unibo.it
+#		nse.physics.unitn.it
+# 		https://github.com/PhysicsBehindElectronics/XELab
+#
+# --------------------------------------------------------------------------
+
+echo
+echo "Checking for software/libraries required by the package..."
+echo
+
+if ! [ -x "$(command -v g++)" ]; then
+	echo "Warning: g++ cannot be found. Please install g++, or modify Makefile(s) to use a different compiler"
+else
+	gccv=$(g++ --version | head -1)
+	echo "Found: g++, version: "$gccv
+fi
+
+if ! [ -x "$(command -v gnuplot)" ]; then
+	echo "Error: gnuplot cannot be found. Please check that gnuplot is properly installed." >&2
+else
+	gpv=$(gnuplot --version)
+	echo "Found: gnuplot, version: "$gpv
+fi
+
+if ! [ -x "$(command -v wx-config)" ]; then
+	echo "Error: wx-config cannot be found. Please check that wxWidgets is properly installed." >&2
+else
+	wxv=$(wx-config --version)
+	echo "Found: wx-config, version: "$wxv
+fi
+
+lasound=$(apt -qq list libasound2-dev 2> /dev/null)
+if [ -z "$lasound" ]; then
+	echo "Error: libasound2-dev not found. Please check that libasound2-dev is properly installed." >&2
+else
+	echo "Found: libasound (dev), details: "$lasound
+fi
+
+if [ -d "$HOME/bin" ]; then
+	echo "Found: '$HOME/bin' directory exists, executables will be linked there by 'make install'."
+else
+	echo "Directory $HOME/bin does not exists: executables will be created, but 'make install' will fail (manual install will be required)."
+fi
+
+echo
+echo "Everything found, seems like the system is ready."
+echo

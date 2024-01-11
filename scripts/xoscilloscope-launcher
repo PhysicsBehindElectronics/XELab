@@ -1,0 +1,84 @@
+#!/bin/bash
+
+# --------------------------------------------------------------------------
+#
+# This file is part of the XELab software package.
+#
+# Version 1.1 - January 2024
+#
+#
+# The XELab package is free software; you can use it, redistribute it,
+# and/or modify it under the terms of the GNU General Public License
+# version 3 as published by the Free Software Foundation. The full text
+# of the license can be found in the file LICENSE.txt at the top level of
+# the package distribution.
+#
+# Authors:
+# 		Leonardo Ricci, Alessio Perinelli, Marco Prevedelli
+# 		leonardo.ricci@unitn.it
+# 		alessio.perinelli@unitn.it
+# 		marco.prevedelli@unibo.it
+#		nse.physics.unitn.it
+# 		https://github.com/PhysicsBehindElectronics/XELab
+#
+# --------------------------------------------------------------------------
+
+if [ "$1" == "start" ]; then
+
+	if [ -f .pid.scope ] || [ -f .pid.console ]; then
+		echo "Temporary files found in this directory. Running more than one instance of xoscilloscope in the same directory is not allowed. Is xoscilloscope already running in here? If not, use '$0 purge' to clean the directory."
+		exit
+	fi
+
+	rm -f *.socket
+	rm -f *.fifo
+
+	echo "Launching console..."
+	xoscilloscope-console &
+	CONSOLE_PID=$(echo $!)
+	echo $CONSOLE_PID > .pid.console
+	sleep 1
+
+	echo "Launching oscilloscope..."
+	xoscilloscope-engine &
+	SCOPE_PID=$(echo $!)
+	echo $SCOPE_PID > .pid.scope
+	sleep 1
+
+	echo "PIDs: "$CONSOLE_PID", "$SCOPE_PID
+	echo "Use '$0 stop' to shut down the oscilloscope."
+
+elif [ "$1" == "stop" ]; then
+	SCOPE_PID=$(cat .pid.scope)
+	CONSOLE_PID=$(cat .pid.console)
+	kill -2 $SCOPE_PID
+	kill -9 $CONSOLE_PID
+	sleep 1
+
+	rm -f *.socket
+	rm -f *.fifo
+
+	rm -f .pid.scope
+	rm -f .pid.console
+
+elif [ "$1" == "purge" ]; then
+	if [ -f .pid.scope ] || [ -f .pid.console ]; then
+		SCOPE_PID=$(cat .pid.scope)
+		CONSOLE_PID=$(cat .pid.console)
+		n1=$(ps $SCOPE_PID | wc -l)
+		n2=$(ps $CONSOLE_PID | wc -l)
+		if [ $n1 -gt 1 ] || [ $n2 -gt 1 ]; then
+			echo "An istance of xoscilloscope is still running here. Use '$0 stop' to shut down the oscilloscope."
+		else
+			rm -f *.socket *.fifo .pid.scope .pid.console
+			echo "Temporary files removed."
+		fi
+	else
+		echo "Nothing to remove here..."
+		exit
+	fi
+
+else
+	echo "Use '$0 start' to start up the oscilloscope."
+	echo "Use '$0 stop' to shut down the oscilloscope."
+fi
