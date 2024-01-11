@@ -1,10 +1,12 @@
-# RemoteLab
+# XELab
 
-The **RemoteLab package** is an open-source Linux toolbox made of several intercommunicating programs that provide the following **two tools to carry out basic experiments in electronics**.
+The **XELab package** is an open-source Linux toolbox made of several intercommunicating programs that provide the following **two tools to carry out basic experiments in electronics**.
 * An **oscilloscope** to acquire signals from the microphone input of a computer's sound card.
 * A **waveform generator** to generate signals and deliver them to the headphones/speaker output of a computer's sound card.
 
-The package is available for Linux. To access the sound card, the programs rely on the **ALSA** Library API ([Advanced Linux Sound Architecture](https://alsa-project.org/wiki/Main_Page)). ALSA is part of the Linux kernel (since version 2.5, 2002) and is therefore available on any recent Linux system. The oscilloscope uses [**gnuplot**](http://www.gnuplot.info/), an open-source plotting program, as data display engine. Graphical user interfaces (GUI) for the two tools are built on the [**wxWidgets** library](https://www.wxwidgets.org/), an open-source cross-platform GUI library.
+**XELab** stands for _linu**X** **E**lectronics **Lab**oratory_.
+
+To access the sound card, the programs rely on the **ALSA** Library API ([Advanced Linux Sound Architecture](https://alsa-project.org/wiki/Main_Page)). ALSA is part of the Linux kernel (since version 2.5, 2002) and is therefore available on any recent Linux system. The oscilloscope uses [**gnuplot**](http://www.gnuplot.info/), an open-source plotting program, as data display engine. Graphical user interfaces (GUI) for the two tools are built on the [**wxWidgets** library](https://www.wxwidgets.org/), an open-source cross-platform GUI library.
 
 ## License
 
